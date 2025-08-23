@@ -10,5 +10,12 @@
         margin: 0 auto;
         max-width: 400px;
         height: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .mat-mdc-form-field {
+        width: 100%;
     }
 }

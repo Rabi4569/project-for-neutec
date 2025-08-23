@@ -1,4 +1,4 @@
-import { localStorageService } from "./LocalStorageService";
+import { LocalStorageService } from "./LocalStorageService";
 
 interface ArticleItem{
     caption:string,
@@ -10,7 +10,7 @@ export class ArticleService {
 
     static getAllArticles ():ArticleItem[] {
 
-        return localStorageService.getItem('ArticleData');
+        return LocalStorageService.getItem('ArticleData');
     
     }
 

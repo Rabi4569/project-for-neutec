@@ -1,0 +1,12 @@
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .app-tool {
+
+    }
+    .main-container {
+        flex-grow: 1;
+    }
+}

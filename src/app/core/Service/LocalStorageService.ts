@@ -1,4 +1,10 @@
-export class localStorageService {
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root' 
+})
+
+export class LocalStorageService {
 
     static setItem (itmeKey:string, itemContent:{}):boolean {
 
