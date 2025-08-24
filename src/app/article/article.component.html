@@ -7,16 +7,27 @@
             </button>
         </div>
         <div class="table-container">
-            <app-data-table [data]="data()" [actionTemplate]="actionTemplate" [showSelection]="true" [columns]="['id', 'title', 'tag']"/>
+            <app-data-table 
+                [data]="data()" 
+                [actionTemplate]="actionTemplate" 
+                [showSelection]="true" 
+                [columns]="['id', 'title', 'tag']"
+                [columnTemplates]="{ tag: tagTemplate }"
+                (selectionChange)="onSelectionChange($event)"
+            />
+            <ng-template #tagTemplate let-row let-value="value">
+                ㄉ123 {{value}}
+            </ng-template>
             <ng-template #actionTemplate let-row>
                 <button 
-                    matMiniFab 
+                    matIconButton 
                     (click)="edit(row)"
                     matTooltip="Edit this article."
                 >
                     <mat-icon>edit</mat-icon>
                 </button>
             </ng-template>
+            
         </div>
         <div class="paginator-container">
             <mat-paginator 

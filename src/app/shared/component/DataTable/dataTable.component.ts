@@ -1,4 +1,4 @@
-import { Component, input, TemplateRef, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, output, TemplateRef, computed, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -17,7 +17,7 @@ import { SelectionModel } from '@angular/cdk/collections';
     styleUrls: ['./dataTable.component.scss']
 })
 
-export class DataTableComponent {
+export class DataTableComponent implements OnInit{
 
     data    = input<any[]>([]);
     columns = input<string[]>([]);
@@ -26,10 +26,11 @@ export class DataTableComponent {
     showSelection = input<boolean>(false)
     selection     = new SelectionModel<any>(true, []);
 
+    selectionChange = output<any[]>();
+
     actionTemplate  = input<TemplateRef<any>>();
 
     displayedColumns = computed(() => {
-
         let disCol = this.columns();
 
         if(this.actionTemplate()){
@@ -41,7 +42,33 @@ export class DataTableComponent {
         }
 
         return disCol;
-        
     });
 
+    // 全選相關方法
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.data().length;
+        return numSelected === numRows;
+    }
+
+    toggleAllRows() {
+        if (this.isAllSelected()) {
+            this.selection.clear();
+        } else {
+            this.selection.select(...this.data());
+        }
+    }
+
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? '取消全選' : '全選'}`;
+        }
+        return `${this.selection.isSelected(row) ? '取消選擇' : '選擇'} row ${row.id}`;
+    }
+
+    ngOnInit() {  
+        this.selection.changed.subscribe(() => {
+            this.selectionChange.emit(this.selection.selected);
+        });
+    }
 }

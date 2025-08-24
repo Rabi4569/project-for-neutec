@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule}  from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component ({
@@ -46,15 +47,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 export class ArticleComponent implements OnInit{
 
     articleForm: FormGroup;
-    data     = signal<any[]>([]);
-    loading  = signal(true);
-    tagReady = signal(false);
-    editForm = signal<boolean>(false);
-    tagData  = signal<any[]>([])
+    data      = signal<any[]>([]);
+    loading   = signal(true);
+    tagReady  = signal(false);
+    tagData   = signal<any[]>([])
+    editForm  = signal<boolean>(false);
 
     constructor(
         private articleService:ArticleService,
         private fb: FormBuilder, 
+        private router: Router,
+        private route: ActivatedRoute
     )
     {
         this.articleForm = this.fb.group({
@@ -65,7 +68,8 @@ export class ArticleComponent implements OnInit{
             date:[new Date()]
         });
 
-        this.tagData.set(this.articleService.getArticleTag())
+        this.tagData.set(this.articleService.getArticleTag());
+
     }
 
     get tagsFormArray(): FormArray {
@@ -90,13 +94,20 @@ export class ArticleComponent implements OnInit{
        
     }
 
-    openEditor () {
-        this.editForm.set(true)
+    openEditor (id:number = 0) {
+
+       this.editForm.set(true)
+      
     }
 
     edit(row: any) {
         console.log('編輯:', row);
         // 你的編輯邏輯
+    }
+
+    delete(row: any) {
+        console.log('刪除:', row);
+        // 你的刪除邏輯
     }
 
     confirmEdit(){
@@ -114,10 +125,7 @@ export class ArticleComponent implements OnInit{
         this.editForm.set(false)
     }
 
-    delete(row: any) {
-        console.log('刪除:', row);
-        // 你的刪除邏輯
-    }
+   
 
     getArticleList () {
 
@@ -139,6 +147,10 @@ export class ArticleComponent implements OnInit{
                 this.loading.set(false);
             }
         });
+    }
+
+    onSelectionChange(selectedItem:any){
+        console.log(selectedItem)
     }
 
     ngOnInit() {  
