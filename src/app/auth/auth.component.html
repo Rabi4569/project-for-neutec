@@ -1,7 +1,7 @@
-<div class="loggin-container">
+<div class="login-container">
     <mat-card class="login-card" appearance="outlined">
         <mat-card-header>
-            <mat-card-title>Loggin</mat-card-title>
+            <mat-card-title class="logi-title">Login</mat-card-title>
             <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
         </mat-card-header>
         <mat-card-content>
@@ -13,12 +13,14 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Password</mat-label>
                     <input matInput placeholder="Enter password please" [type]="passworedType()" formControlName="password">
+                    <button mat-icon-button matSuffix (click)="togglePasswordType()">
+                        <mat-icon>{{passworedType() === 'password' ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
                 </mat-form-field>
             </form>
         </mat-card-content>
         <mat-card-actions>
-            <button matButton="filled" (click)="login()">loggin</button>
-            <button matButton="filled" (click)="togglePasswordType()">togglePasswordType</button>
+            <button matButton="filled" (click)="login()">Login</button>
         </mat-card-actions>
     </mat-card>
 </div>

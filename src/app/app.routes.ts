@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { LogginComponent } from './auth/auth.component';
-import { ArticleComponent } from './article/article.component'
 
 export const routes: Routes = [
     {
@@ -10,11 +8,11 @@ export const routes: Routes = [
     },
     {
         path:'auth',
-        component:LogginComponent
+        loadComponent: () => import('./auth/auth.component').then(m => m.LogginComponent)
     },
     {
         path:'article',
-        component:ArticleComponent
+        loadComponent: () => import('./article/article.component').then(m => m.ArticleComponent)
     },
     {
         path:"**",

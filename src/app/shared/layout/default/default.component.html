@@ -3,14 +3,21 @@
         <button matIconButton class="drawer-butotn" (click)="drawer.toggle()" aria-label="Example icon-button with menu icon">
           <mat-icon>menu</mat-icon>
         </button>
-        <span>My App</span>
+        <span>System Admin</span>
         <span class="example-spacer"></span>
     </mat-toolbar>
     <mat-drawer-container class="main-container">
         <mat-drawer #drawer mode="over">
-            <p>選單項目 1</p>
-            <p>選單項目 2</p>
-            <p>選單項目 3</p>
+            <mat-list role="list" class="menu-list">
+                @for (menuItem of systemMenu; track menuItem.link) {
+                    <mat-list-item role="listitem" class="menu-list-item">
+                        <div class="icon">
+                            <mat-icon>{{ menuItem.icon }}</mat-icon>
+                        </div>
+                        <div class="text">{{ menuItem.caption }}</div>
+                    </mat-list-item>
+                }
+            </mat-list>
         </mat-drawer>
         <mat-drawer-content>
             <ng-content></ng-content>

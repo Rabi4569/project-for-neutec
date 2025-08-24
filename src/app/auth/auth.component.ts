@@ -6,7 +6,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule}  from '@angular/material/card';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '../core/Service/LocalStorageService';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../core/Service/AuthService';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-auth-login',
@@ -18,7 +20,12 @@ import { LocalStorageService } from '../core/Service/LocalStorageService';
         MatCardModule, 
         MatButtonModule,
         MatInputModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatIconModule,
+    ],
+    providers:[
+        AuthService,
+        MatSnackBar
     ],
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss']
@@ -29,26 +36,38 @@ export class LogginComponent {
     loginForm: FormGroup;
     passworedType = signal("password")
 
-    constructor(private fb: FormBuilder, private router: Router ) {
+    constructor(
+        private fb: FormBuilder, 
+        private router: Router, 
+        private authService:AuthService,
+        private snackBar: MatSnackBar
+    ) {
         this.loginForm = this.fb.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required]
+            username: ['admin_user', Validators.required],
+            password: ['admin_password', Validators.required]
         });
     }
 
     login():boolean {
 
         if(!this.loginForm.valid){
-            console.log('表單不完整');
+            this.snackBar.open('帳號密碼為必填', '關閉', {
+                duration: 3000,
+                horizontalPosition: 'center', 
+                verticalPosition: 'top'
+            });
             return false;
         }
 
-        if(!this.verifyUser){
-            console.log('使用者帳號或密碼錯誤');
+
+        if(!this.verifyUser()){
+            this.snackBar.open('帳號或密碼錯誤', '關閉', {
+                duration: 3000,
+                horizontalPosition: 'center', 
+                verticalPosition: 'top'
+            });
             return false;
         } 
-
-        console.log("test");
 
         this.router.navigate(['/article']);
 
@@ -57,8 +76,7 @@ export class LogginComponent {
 
     verifyUser () {
 
-        return true;
-
+        return AuthService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
     }
 
     togglePasswordType(){
@@ -66,9 +84,13 @@ export class LogginComponent {
         const nowType = this.passworedType()
 
         if(nowType === "text"){
+
             this.passworedType.set("password")
+
         }else{
+
             this.passworedType.set("text")
+
         }
     }
 }

@@ -1,3 +1,12 @@
 <app-default-layout>
-    123
+    <app-data-table [data]="data()" [actionTemplate]="actionTemplate" [showSelection]="true" [columns]="['id', 'caption', 'tag']"/>
+    <ng-template #actionTemplate let-row>
+        <button 
+            matMiniFab 
+            (click)="edit(row)"
+            matTooltip="Edit this article."
+        >
+            <mat-icon>edit</mat-icon>
+        </button>
+    </ng-template>
 </app-default-layout>

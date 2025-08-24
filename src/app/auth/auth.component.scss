@@ -1,5 +1,5 @@
 
-.loggin-container{
+.login-container{
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -12,7 +12,23 @@
         height: fit-content;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        padding: 24px;
+
+
+        .mat-mdc-card-header {
+            flex-direction: column;
+          
+
+            .logi-title {
+                text-align: center;
+                padding-bottom: 16px;
+            }
+        }
+
+        .mat-mdc-card-actions {
+            justify-content: center;
+        }
+      
     }
 
     .mat-mdc-form-field {
