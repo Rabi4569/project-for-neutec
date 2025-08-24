@@ -14,7 +14,7 @@ interface TagItem{
     value:number
 }
 
-interface ResponseData {
+interface ResponseListData {
     status:number,
     data:{
         list:ArticleItem[],
@@ -24,7 +24,7 @@ interface ResponseData {
 
 export class ArticleService {
 
-    getAllArticles(): Observable<ResponseData> {
+    getAllArticles(): Observable<ResponseListData> {
         return of({
             status:200,
             data:{

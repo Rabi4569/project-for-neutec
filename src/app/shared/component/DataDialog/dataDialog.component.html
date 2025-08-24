@@ -1,5 +1,5 @@
 <div class="dialog-container" (click)="onCancel()" [ngClass]="{
-        'close': !open(),
+        'open': open(),
     }">
     <div class="dialog-content" (click)="$event.stopPropagation()">
         <h2 mat-dialog-title>{{ title() }}</h2>
