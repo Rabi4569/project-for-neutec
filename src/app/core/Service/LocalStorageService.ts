@@ -17,7 +17,7 @@ export class LocalStorageService {
 
     static getItem(itemKey:string) {
 
-        return JSON.parse(localStorage.getItem(itemKey) || "{}")
+        return JSON.parse(localStorage.getItem(itemKey) || "[]")
 
     }
 

@@ -1,0 +1,18 @@
+<div class="dialog-container" (click)="onCancel()" [ngClass]="{
+        'close': !open(),
+    }">
+    <div class="dialog-content" (click)="$event.stopPropagation()">
+        <h2 mat-dialog-title>{{ title() }}</h2>
+        <mat-dialog-content>
+            <ng-content></ng-content>
+        </mat-dialog-content>
+        @if (showActions()) {
+            <mat-dialog-actions class="action-button">
+                <button mat-button (click)="onCancel();">{{ cancelText() }}</button>
+                <button matButton="filled" (click)="onConfirm();">{{confirmText()}}</button>
+            </mat-dialog-actions>
+        }
+    </div>
+</div>
+
+

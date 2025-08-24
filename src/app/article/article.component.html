@@ -1,12 +1,75 @@
 <app-default-layout>
-    <app-data-table [data]="data()" [actionTemplate]="actionTemplate" [showSelection]="true" [columns]="['id', 'caption', 'tag']"/>
-    <ng-template #actionTemplate let-row>
-        <button 
-            matMiniFab 
-            (click)="edit(row)"
-            matTooltip="Edit this article."
-        >
-            <mat-icon>edit</mat-icon>
-        </button>
-    </ng-template>
+    <div class="page-content">
+        <div class="index-tool-container">
+            <button matButton="filled" (click)="openEditor()">
+                <mat-icon>add</mat-icon>
+                Create New 
+            </button>
+        </div>
+        <div class="table-container">
+            <app-data-table [data]="data()" [actionTemplate]="actionTemplate" [showSelection]="true" [columns]="['id', 'title', 'tag']"/>
+            <ng-template #actionTemplate let-row>
+                <button 
+                    matMiniFab 
+                    (click)="edit(row)"
+                    matTooltip="Edit this article."
+                >
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </ng-template>
+        </div>
+        <div class="paginator-container">
+            <mat-paginator 
+                [length]="100"
+                [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+    <app-data-dialog 
+        [title]="'Create New Article'" 
+        [open]="editForm()"
+        (confirm)="confirmEdit()"
+        (cancel)="cancelEdit()"
+    >
+        <form [formGroup]="articleForm" >
+            <div class="form-content">
+                <mat-form-field appearance="outline">
+                    <mat-label>title</mat-label>
+                    <input matInput placeholder="Enter title please" formControlName="title">
+                </mat-form-field>
+                <div class="tag-selection">
+                    <label>選擇標籤：</label>
+                    @for(tagItem of tagData(); track tagItem.value) {
+                        <mat-checkbox 
+                            >
+                            {{ tagItem.name }}
+                        </mat-checkbox>
+                    }
+                </div>
+              
+                <mat-form-field appearance="outline">
+                    <mat-label>author</mat-label>
+                    <input matInput placeholder="Enter title please" formControlName="author">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Content</mat-label>
+                    <textarea matInput 
+                              placeholder="Enter content please" 
+                              formControlName="content"
+                              rows="6"
+                              cols="50">
+                    </textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date">
+                    <mat-hint>YYYY/MM/DD</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </form>
+    </app-data-dialog>
 </app-default-layout>

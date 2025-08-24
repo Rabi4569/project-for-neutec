@@ -6,10 +6,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
     selector: 'app-data-table',
-    imports:[
+    imports: [
         CommonModule,
         MatTableModule,
-        MatCheckboxModule
+        MatCheckboxModule,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
