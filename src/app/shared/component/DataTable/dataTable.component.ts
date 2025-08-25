@@ -25,6 +25,7 @@ export class DataTableComponent implements OnInit{
 
     showSelection = input<boolean>(false)
     selection     = new SelectionModel<any>(true, []);
+    loading       = input<boolean>(false);
 
     selectionChange = output<any[]>();
 
@@ -61,9 +62,9 @@ export class DataTableComponent implements OnInit{
 
     checkboxLabel(row?: any): string {
         if (!row) {
-            return `${this.isAllSelected() ? '取消全選' : '全選'}`;
+            return `${this.isAllSelected() ? 'cancel all selected' : 'select all'}`;
         }
-        return `${this.selection.isSelected(row) ? '取消選擇' : '選擇'} row ${row.id}`;
+        return `${this.selection.isSelected(row) ? 'cancel selected' : 'select'} row ${row.id}`;
     }
 
     ngOnInit() {  

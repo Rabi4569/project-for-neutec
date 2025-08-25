@@ -1,7 +1,6 @@
 import { LocalStorageService } from "./LocalStorageService";
 import { Observable, of, delay } from 'rxjs';
 
-
 interface ArticleItem{
     id:number,
     caption:string,
@@ -44,7 +43,7 @@ export class ArticleService {
 
     }
 
-    addNewArticle (data:ArticleItem){
+    saveArticle (data:ArticleItem){
 
         const ArticleData = LocalStorageService.getItem('ArticleData');
 
@@ -72,7 +71,7 @@ export class ArticleService {
 
     }
 
-    updateArticle (id:number) {
+    updateArticle (data:any) {
 
     }
 
@@ -80,17 +79,17 @@ export class ArticleService {
 
         return [
             {
-                name:"分類1",
+                name:"tag 1",
                 value:1
             },
             {
-                name:"分類2",
+                name:"tag 2",
                 value:2
             }, {
-                name:"分類3",
+                name:"tag 3",
                 value:3
             }, {
-                name:"分類4",
+                name:"tag 4",
                 value:4
             }
         ]

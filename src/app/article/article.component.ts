@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, computed } from '@angular/core';
+import { Component, signal, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultLayoutComponent } from '../shared/layout/default/default.component';
 import { DataTableComponent } from '../shared/component/DataTable/dataTable.component';
@@ -7,15 +7,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ArticleService } from '../core/Service/ArticleService';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { DataDialogComponent } from '../shared/component/DataDialog/dataDialog.component';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule}  from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ArticleEditorComponent } from './editor/editor.component';
+import { MatChipsModule } from '@angular/material/chips';
 
+interface Article {
+    id:number,
+    title:string,
+    content:string,
+    author:string,
+    date:string,
+    tag:number[]
+}
 
 @Component ({
     selector: 'app-article',
@@ -28,13 +32,10 @@ import { Router, ActivatedRoute } from '@angular/router';
         MatIconModule,
         MatTooltipModule,
         MatPaginatorModule,
-        DataDialogComponent,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatFormFieldModule,
         MatIconModule,
-        MatDatepickerModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        ArticleEditorComponent,
+        MatChipsModule
     ],
     providers: [
         ArticleService,
@@ -46,53 +47,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 export class ArticleComponent implements OnInit{
 
-    articleForm: FormGroup;
+    @ViewChild(DataTableComponent) tabler!: DataTableComponent;
+
     data      = signal<any[]>([]);
     loading   = signal(true);
     tagReady  = signal(false);
     tagData   = signal<any[]>([])
     editForm  = signal<boolean>(false);
 
-    constructor(
-        private articleService:ArticleService,
-        private fb: FormBuilder, 
-        private router: Router,
-        private route: ActivatedRoute
-    )
-    {
-        this.articleForm = this.fb.group({
-            title: ['', Validators.required],
-            content: ['', Validators.required],
-            author: [''],
-            tag: this.fb.array([]),
-            date:[new Date()]
-        });
+    selectedArticle: Article | null = null;
+    deleteButton = signal<boolean>(false)
 
-        this.tagData.set(this.articleService.getArticleTag());
-
-    }
-
-    get tagsFormArray(): FormArray {
-        return this.articleForm.get('tag') as FormArray;
-    }
-
-    createNewArticle () {
-
-        const selectedTags = this.tagsFormArray.value
-            .map((checked: boolean, i: number) => (checked ? this.tagData()[i].value : null))
-            .filter((v: number | null): v is number => v !== null);
-
-        this.articleForm.value.tag = selectedTags;
-        
-        const response =  this.articleService.addNewArticle(this.articleForm.value);
-
-        if(response.status === 200){
-
-            this.editForm.set(false)
-            this.getArticleList();
-        }// console.log(response);
-       
-    }
+    constructor( private articleService:ArticleService ){}
 
     openEditor (id:number = 0) {
 
@@ -102,30 +68,13 @@ export class ArticleComponent implements OnInit{
 
     edit(row: any) {
         console.log('編輯:', row);
-        // 你的編輯邏輯
+        this.selectedArticle = row;  // 設置要編輯的文章
+        this.editForm.set(true)      
     }
 
     delete(row: any) {
         console.log('刪除:', row);
-        // 你的刪除邏輯
     }
-
-    confirmEdit(){
-        if (this.articleForm.valid) {
-
-            this.createNewArticle()
-            
-        } else {
-            console.log('表單無效');
-            this.articleForm.markAllAsTouched(); 
-        }
-    }
-
-    cancelEdit(){
-        this.editForm.set(false)
-    }
-
-   
 
     getArticleList () {
 
@@ -133,24 +82,54 @@ export class ArticleComponent implements OnInit{
 
         this.articleService.getAllArticles().subscribe({
             next: (res) => {
-
                 if(res.status === 200){
+
+                    this.tabler.selection.clear()
                     this.data.set(res.data.list);
-                    this.tagData.set(res.data.tag)
-
-                    const tagControls = this.tagData().map(() => this.fb.control(false));
-                    this.articleForm.setControl('tag', this.fb.array(tagControls));
-
-                    this.tagReady.set(true)
+                    this.tagData.set(res.data.tag);
+                    
                 }
-
+            },
+            error: (error) => {
+                console.error('Loading failed:', error);
+            },
+            complete:() => {
                 this.loading.set(false);
             }
         });
     }
 
     onSelectionChange(selectedItem:any){
-        console.log(selectedItem)
+        if(selectedItem.length > 0){
+            this.deleteButton.set(true)
+        }else{
+            this.deleteButton.set(false)
+        }
+    }
+
+    getTagContent (tagData:number[]) {
+
+        const tagMap = this.tagData();
+
+        return tagData.map(tag => tagMap.find(mapitem => mapitem.value === tag).name)
+    }
+
+    onSave(updatedArticle: any) {
+
+        const response = this.articleService.saveArticle(updatedArticle);
+
+        if(response.status === 200) {
+            this.selectedArticle = null;  
+            this.editForm.set(false);
+            
+            this.getArticleList();
+        }
+        
+    }
+  
+    onCancel() {
+        this.editForm.set(false);
+        this.selectedArticle = null
     }
 
     ngOnInit() {  

@@ -1,0 +1,26 @@
+.form-content {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    max-width: 768px;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .form-field {
+        width: 49%;
+
+        
+        &.content,
+        &.title {
+            width: 100%;
+        }
+    }
+
+
+}
