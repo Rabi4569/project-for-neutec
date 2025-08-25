@@ -64,7 +64,6 @@ export class ArticleEditorComponent {
             tag: this.formBuilder.array(
                 tagData.map(() => new FormControl(false))
             ),
-            date:[new Date().toISOString()]
         });
 
         effect(() => {

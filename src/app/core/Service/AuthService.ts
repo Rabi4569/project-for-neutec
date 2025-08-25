@@ -1,23 +1,23 @@
 import { CookieService } from "./CookieService"
-
-/**
- * 此部分僅提供登入模擬 token正式上線請改用後端派發的http only 
- * 並改為加密密碼
- */
+import {of, delay } from 'rxjs';
 
 export class AuthService {
 
     static login (username:string, password:string) {
 
-        if(username !== "admin_user") return false;
-        if(password !== "admin_password") return false; 
+        let status = 200;
+
+        if(username !== "admin_user") status = 401;
+        if(password !== "admin_password") status = 401; 
 
         CookieService.setCookie('token', 'test-token', 7)
 
-        return {
-            status:200,
+        return of({
+            status:status,
             message:"success"
-        }
+        }).pipe(
+            delay(1500) 
+        );
 
     }
 
@@ -25,6 +25,13 @@ export class AuthService {
 
        CookieService.deleteCookie('token')
 
+    }
+
+    static checkLoggin ():boolean{
+
+        const token = CookieService.getCookie('token')
+
+        return token !== null && token === "test-token"
     }
 
 }

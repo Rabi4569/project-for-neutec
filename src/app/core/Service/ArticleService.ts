@@ -47,20 +47,33 @@ export class ArticleService {
 
         const ArticleData = LocalStorageService.getItem('ArticleData');
 
-        if(ArticleData.length < 0){
+        data.date = new Date().toISOString().split('T')[0];
 
-            data.id = 1;
+        if (data.id) {
 
-        }else{
+            const index = ArticleData.findIndex((item:ArticleItem) => item.id === data.id);
 
-            
-            const lastId = ArticleData[ArticleData.length - 1]?.id || 0
+            if (index !== -1) {
 
-            data.id = lastId ? lastId + 1  : 1 ;
+              ArticleData[index] = data;
 
-        }
+            } else {
 
-        ArticleData.push(data);
+              throw new Error('not found article.');
+
+            }
+
+          } else {
+
+            const maxId = ArticleData.length > 0
+              ? Math.max(...ArticleData.map((item:ArticleItem) => item.id))
+              : 0;
+      
+            data.id = maxId + 1;
+            ArticleData.push(data);
+
+          }
+       
 
         LocalStorageService.setItem('ArticleData', ArticleData)
 
@@ -71,9 +84,6 @@ export class ArticleService {
 
     }
 
-    updateArticle (data:any) {
-
-    }
 
     getArticleTag () {
 
@@ -85,10 +95,12 @@ export class ArticleService {
             {
                 name:"tag 2",
                 value:2
-            }, {
+            }, 
+            {
                 name:"tag 3",
                 value:3
-            }, {
+            }, 
+            {
                 name:"tag 4",
                 value:4
             }

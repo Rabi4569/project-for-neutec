@@ -20,7 +20,12 @@
             </form>
         </mat-card-content>
         <mat-card-actions>
-            <button matButton="filled" (click)="login()">Login</button>
+            @if (loading()) {
+                <mat-spinner diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+            }
+            <button matButton="filled" [disabled]="loading()" (click)="login()">
+                {{ !loading() ? "Login" : "Logging..." }}
+            </button>
         </mat-card-actions>
     </mat-card>
 </div>

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../core/Service/AuthService';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
 
 @Component({
     selector: 'app-auth-login',
@@ -22,6 +23,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
         MatInputModule,
         MatFormFieldModule,
         MatIconModule,
+        MatProgressSpinnerModule
     ],
     providers:[
         AuthService,
@@ -35,6 +37,7 @@ export class LogginComponent {
 
     loginForm: FormGroup;
     passworedType = signal("password")
+    loading = signal<boolean>(false)
 
     constructor(
         private fb: FormBuilder, 
@@ -43,40 +46,75 @@ export class LogginComponent {
         private snackBar: MatSnackBar
     ) {
         this.loginForm = this.fb.group({
-            username: ['admin_user', Validators.required],
+            username: ['admin_user', [Validators.required, this.usernameValidator]],
             password: ['admin_password', Validators.required]
+        });
+
+        effect(() => {
+
+            if(this.loading()){
+                this.loginForm.disable();
+            }else{
+                this.loginForm.enable();
+            }
+
+        })
+    }
+
+    usernameValidator(control: any) {
+        const value = control.value;
+        if (!value) return null;
+    
+        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+          return { invalidUsername: true };
+        }
+        return null;
+      }
+    
+
+    private showError(message: string): void {
+        this.snackBar.open(message, '關閉', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
         });
     }
 
-    login():boolean {
-
-        if(!this.loginForm.valid){
-            this.snackBar.open('帳號密碼為必填', '關閉', {
-                duration: 3000,
-                horizontalPosition: 'center', 
-                verticalPosition: 'top'
-            });
-            return false;
+    async login(): Promise<void> {
+        if (!this.loginForm.valid) {
+            this.showError('username/password error or empty');
+            return;
         }
-
-
-        if(!this.verifyUser()){
-            this.snackBar.open('帳號或密碼錯誤', '關閉', {
-                duration: 3000,
-                horizontalPosition: 'center', 
-                verticalPosition: 'top'
-            });
-            return false;
-        } 
-
-        this.router.navigate(['/article']);
-
-        return true;
+  
+        this.loading.set(true);
+  
+        try {
+            const success = await this.verifyUser();
+            if (success) {
+                this.router.navigate(['/article']);
+            } else {
+                this.showError('User not found or password Incorrect.');
+            }
+        } catch (error) {
+            this.showError('Login failed.');
+            console.error('Login error:', error);
+        } finally {
+            this.loading.set(false);
+        }
     }
+  
 
-    verifyUser () {
+    private verifyUser(): Promise<boolean> {
 
-        return AuthService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
+        const username = this.loginForm.get('username')?.value;
+        const password = this.loginForm.get('password')?.value;
+  
+        return new Promise((resolve, reject) => {
+            AuthService.login(username, password).subscribe({
+                next: (res) => resolve(res.status === 200),
+                error: (error) => reject(error)
+            });
+        });
     }
 
     togglePasswordType(){

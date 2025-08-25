@@ -1,4 +1,11 @@
-@if(data().length > 0){
+@if(loading()){
+
+    <div class="loading">
+        <mat-spinner diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+        Loading Data...
+    </div>
+
+}@else if(data().length > 0){
     
     <table mat-table [dataSource]="data()" class="mat-elevation-z8">
         <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>

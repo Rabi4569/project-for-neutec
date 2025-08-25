@@ -26,6 +26,7 @@ export class DataDialogComponent {
     
     cancel  = output();
     confirm = output();
+    bgCancel = output();
 
     constructor(){}
 
@@ -35,6 +36,10 @@ export class DataDialogComponent {
 
     onConfirm() {
         this.confirm.emit();
+    }
+
+    backGroundCancel () {
+        this.bgCancel.emit();
     }
 
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SelectionModel } from '@angular/cdk/collections';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-data-table',
@@ -10,6 +11,7 @@ import { SelectionModel } from '@angular/cdk/collections';
         CommonModule,
         MatTableModule,
         MatCheckboxModule,
+        MatProgressSpinnerModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,

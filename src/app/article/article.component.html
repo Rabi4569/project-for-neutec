@@ -14,10 +14,11 @@
         </div>
         <div class="table-container">
             <app-data-table 
+                [loading]="loading()"
                 [data]="data()" 
                 [actionTemplate]="actionTemplate" 
                 [showSelection]="true" 
-                [columns]="['id', 'title', 'tag']"
+                [columns]="['id', 'title', 'tag', 'author', 'date']"
                 [columnTemplates]="{ tag: tagTemplate }"
                 (selectionChange)="onSelectionChange($event)"
             />

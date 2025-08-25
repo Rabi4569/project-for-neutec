@@ -35,7 +35,7 @@ interface Article {
         MatIconModule,
         MatCheckboxModule,
         ArticleEditorComponent,
-        MatChipsModule
+        MatChipsModule,
     ],
     providers: [
         ArticleService,
