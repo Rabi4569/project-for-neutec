@@ -12,6 +12,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ArticleEditorComponent } from './editor/editor.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertService } from '../core/Service/AlertService';
+import { SearchComponent } from './search/search.component';
 
 interface Article {
     id:number,
@@ -37,10 +39,12 @@ interface Article {
         MatCheckboxModule,
         ArticleEditorComponent,
         MatChipsModule,
+        SearchComponent
     ],
     providers: [
         ArticleService,
         provideNativeDateAdapter(),
+        AlertService
     ],
     templateUrl: './article.component.html',
     styleUrls: ['./article.component.scss']
@@ -52,9 +56,11 @@ export class ArticleComponent implements OnInit{
 
     data      = signal<any[]>([]);
     loading   = signal(true);
+    savingLoading = signal<boolean>(false)
     tagReady  = signal(false);
     tagData   = signal<any[]>([])
     editForm  = signal<boolean>(false);
+    keyword   = signal<string>("")
 
     selectedArticle = signal<Article | null>(null);
     selectedIds = signal<number[]>([]);
@@ -66,7 +72,8 @@ export class ArticleComponent implements OnInit{
     constructor( 
         private articleService: ArticleService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private alertService: AlertService
     ){}
 
     openEditor () {
@@ -80,7 +87,21 @@ export class ArticleComponent implements OnInit{
     }
 
     deleteSelected() {
-        this.articleService.deleteArticle(this.selectedIds())
+        if(window.confirm("Confirm Delete Selected?")){
+            this.articleService.deleteArticle(this.selectedIds()).subscribe({
+                next: (res) => {
+                    if(res.status === 200){
+                        this.alertService.showSuccess(res.message)                        
+                    }
+                },
+                error: (error) => {
+                    console.error('Loading failed:', error);
+                },
+                complete:() => {
+                    this.getArticleList();
+                }
+            })
+        }
     }
 
     getArticleList () {
@@ -92,7 +113,7 @@ export class ArticleComponent implements OnInit{
             page: this.currentPage(),
         };
 
-        this.articleService.getAllArticles(params).subscribe({
+        this.articleService.getAllArticles(params, this.keyword()).subscribe({
             next: (res) => {
                 if(res.status === 200){
 
@@ -125,20 +146,31 @@ export class ArticleComponent implements OnInit{
 
     onSave(updatedArticle: any) {
 
+        this.savingLoading.set(true);
+
         this.articleService.saveArticle(updatedArticle)
         .subscribe({
             next:(response) => {
                 if(response.status === 200) {
                     this.editForm.set(false);
                     this.getArticleList();
+                    this.alertService.showSuccess(response.message)
                 }
 
             },
             error: (error) => {
                 console.error('Save failed:', error);
+            },
+            complete:() => {
+                this.savingLoading.set(false);
             }
         });
         
+    }
+
+    searchKeyword (keyword:string) {
+        this.keyword.set(keyword);
+        this.getArticleList();
     }
   
     onCancel() {

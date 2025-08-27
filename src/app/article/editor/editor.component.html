@@ -36,7 +36,16 @@
                             cols="50">
                 </textarea>
             </mat-form-field>
-            
+            <div slot="action" class="action-container">
+                <button mat-button [disabled]="loading()" (click)="cancelEdit();">Cancel</button>
+                <button matButton="filled" [disabled]="loading()" (click)="confirmEdit();">
+                    @if(loading()){
+                        Saving...
+                    }@else{
+                        Save
+                    }
+                </button>
+            </div>
         </div>
     </form>
 </app-data-dialog>

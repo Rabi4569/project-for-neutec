@@ -37,3 +37,21 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Snackbar styles */
+.success  {
+  background: #4caf50 !important; 
+  color: white !important;
+}
+.error  {
+  background: #f44336 !important; 
+  color: white !important;
+}
+.warning  {
+  background: #ff9800 !important; 
+  color: white !important;
+}
+.info  {
+  background: #2196f3 !important; 
+  color: white !important;
+}

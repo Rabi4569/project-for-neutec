@@ -1,16 +1,21 @@
 <app-default-layout>
     <div class="page-content">
         <div class="index-tool-container">
-            <button matButton="filled" (click)="openEditor()">
-                <mat-icon>add</mat-icon>
-                Create New 
-            </button>
-            @if(deleteButton()){
-                <button matButton="filled" (click)="deleteSelected()">
-                    <mat-icon>delete</mat-icon>
-                    Delete Selected
+            <div class="button-container">
+                <button matButton="filled" (click)="openEditor()">
+                    <mat-icon>add</mat-icon>
+                    Create New 
                 </button>
-            }
+                @if(deleteButton()){
+                    <button matButton="filled" class="error" (click)="deleteSelected()">
+                        <mat-icon>delete</mat-icon>
+                        Delete Selected
+                    </button>
+                }
+            </div>
+            <div class="search-container">
+                <app-search (searching)="searchKeyword($event)"/>
+            </div>
         </div>
         <div class="table-container">
             <app-data-table 
@@ -54,6 +59,7 @@
     <app-article-editor
         [article]="selectedArticle()"
         [open]="editForm()"
+        [loading]="savingLoading()"
         (save)="onSave($event)"
         (cancel)="onCancel()"
     />

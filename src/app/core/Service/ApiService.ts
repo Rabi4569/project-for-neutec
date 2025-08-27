@@ -2,10 +2,11 @@ import {of, delay } from 'rxjs';
 
 export class ApiService {
 
-    static useApi(data:any, status:number | null = null){
+    static useApi(data:any, message:string='empty', status:number | null = null){
         return of({
             status:status ? status : 200,
-            data:data
+            data:data,
+            message:message
         }).pipe(
             delay(1500) 
         );

@@ -8,8 +8,8 @@ import { MatCardModule}  from '@angular/material/card';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../core/Service/AuthService';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
+import { AlertService } from '../core/Service/AlertService';
 
 @Component({
     selector: 'app-auth-login',
@@ -27,7 +27,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ],
     providers:[
         AuthService,
-        MatSnackBar
+        AlertService
     ],
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss']
@@ -43,7 +43,7 @@ export class LogginComponent {
         private fb: FormBuilder, 
         private router: Router, 
         private authService:AuthService,
-        private snackBar: MatSnackBar
+        private alertService:AlertService,
     ) {
         this.loginForm = this.fb.group({
             username: ['admin_user', [Validators.required, this.usernameValidator]],
@@ -72,17 +72,9 @@ export class LogginComponent {
       }
     
 
-    private showError(message: string): void {
-        this.snackBar.open(message, '關閉', {
-            duration: 3000,
-            horizontalPosition: 'center',
-            verticalPosition: 'top'
-        });
-    }
-
     async login(): Promise<void> {
         if (!this.loginForm.valid) {
-            this.showError('username/password error or empty');
+            this.alertService.showWarning('username/password error or empty');
             return;
         }
   
@@ -93,10 +85,10 @@ export class LogginComponent {
             if (success) {
                 this.router.navigate(['/article']);
             } else {
-                this.showError('User not found or password Incorrect.');
+                this.alertService.showError('User not found or password Incorrect.');
             }
         } catch (error) {
-            this.showError('Login failed.');
+            this.alertService.showError('Login failed.');
             console.error('Login error:', error);
         } finally {
             this.loading.set(false);

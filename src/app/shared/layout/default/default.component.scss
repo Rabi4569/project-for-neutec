@@ -6,6 +6,7 @@
     .app-tool {
         box-shadow: 0 2px 5px rgba($color: #000000, $alpha: 0.25);
         margin-bottom: 8px;
+        min-height: 64px;
     }
     .main-container {
         flex-grow: 1;

@@ -8,6 +8,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
 
 interface Article {
     id:number,
@@ -28,7 +29,8 @@ interface Article {
         MatDatepickerModule,
         MatCheckboxModule,
         MatInputModule,
-        MatFormFieldModule
+        MatFormFieldModule,
+        MatButtonModule
     ],
     providers:[
         ArticleService,
@@ -45,7 +47,8 @@ export class ArticleEditorComponent {
     article = input<Article | null >(null)
     tagData = signal<any[]>([])
 
-    open = input<boolean>(false)
+    open    = input<boolean>(false)
+    loading = input<boolean>(false)
 
     save   = output()
     cancel = output()
@@ -67,13 +70,20 @@ export class ArticleEditorComponent {
         });
 
         effect(() => {
-            
             const isOpen = this.open();
             
             if (isOpen) {
                 this.patchArticleToForm();
             }
         });
+
+        effect(() => {
+            if(this.loading()){
+                this.articleForm.disable()
+            }else{
+                this.articleForm.enable()
+            }
+        })
        
     }
 

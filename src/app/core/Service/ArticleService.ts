@@ -26,10 +26,15 @@ interface ResponseListData {
 export class ArticleService {
 
 
-    getAllArticles(query:{page:number}): Observable<ResponseListData> {
+    getAllArticles(query:{page:number}, keyword:string=""): Observable<ResponseListData> {
 
         const allData = LocalStorageService.getItem('ArticleData') || []
-        const reversedData = [...allData].reverse()
+
+        let reversedData = [...allData].reverse()
+
+        if(keyword){
+            reversedData = reversedData.filter(item => item.title.includes(keyword))
+        }
         
         const pageSize = 20
         const startIndex = query.page * pageSize
@@ -40,7 +45,7 @@ export class ArticleService {
         return ApiService.useApi({
             list: paginatedData,
             tag: this.getArticleTag(),
-            total: allData.length
+            total: reversedData.length
         }) 
     }
 
@@ -78,9 +83,7 @@ export class ArticleService {
 
         LocalStorageService.setItem('ArticleData', ArticleData)
 
-        return ApiService.useApi({
-            message:"success"
-        })
+        return ApiService.useApi(null, "Save Success!")
 
     }
 
@@ -92,9 +95,7 @@ export class ArticleService {
 
         LocalStorageService.setItem('ArticleData', saveArticles);
 
-        return ApiService.useApi({
-            message:"success"
-        })
+        return ApiService.useApi(null, "Delete Success!")
 
     }
 

@@ -8,8 +8,9 @@
         </mat-dialog-content>
         @if (showActions()) {
             <mat-dialog-actions class="action-button">
-                <button mat-button (click)="onCancel();">{{ cancelText() }}</button>
-                <button matButton="filled" (click)="onConfirm();">{{confirmText()}}</button>
+                <!-- <button mat-button (click)="onCancel();">{{ cancelText() }}</button>
+                <button matButton="filled" (click)="onConfirm();">{{confirmText()}}</button> -->
+                <ng-content select="[slot=action]"></ng-content>
             </mat-dialog-actions>
         }
     </div>

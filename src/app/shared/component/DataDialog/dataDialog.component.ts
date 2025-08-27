@@ -22,7 +22,7 @@ export class DataDialogComponent {
     open  = input<boolean>(false);
 
     cancelText  = input<string>('cancel');
-    confirmText = input<string>('yes');
+    confirmText = input<string>('Save');
     
     cancel  = output();
     confirm = output();
