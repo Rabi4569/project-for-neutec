@@ -30,7 +30,7 @@ export class DataDialogComponent {
 
     constructor(){}
 
-    onCancel() {
+    onCancel() {    
         this.cancel.emit();
     }
 

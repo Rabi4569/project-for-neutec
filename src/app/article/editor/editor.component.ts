@@ -42,7 +42,7 @@ export class ArticleEditorComponent {
 
     articleForm: FormGroup;
 
-    article = input<Article | null>(null)
+    article = input<Article | null >(null)
     tagData = signal<any[]>([])
 
     open = input<boolean>(false)
@@ -67,8 +67,13 @@ export class ArticleEditorComponent {
         });
 
         effect(() => {
-            this.patchArticleToForm();  
-        })
+            
+            const isOpen = this.open();
+            
+            if (isOpen) {
+                this.patchArticleToForm();
+            }
+        });
        
     }
 
@@ -79,7 +84,10 @@ export class ArticleEditorComponent {
     private patchArticleToForm() {
 
         const thisArticle = this.article()
-
+        
+        // reset form first to clear any existing values
+        this.articleForm.reset();
+        
         // set form
         this.articleForm.patchValue({
             title: thisArticle?.title ?? '',
@@ -91,7 +99,7 @@ export class ArticleEditorComponent {
         // set tag
         const tagFormArray = this.tagsFormArray;
         this.tagData().forEach((tagItem, index) => {
-            const isSelected = thisArticle?.tag.includes(tagItem.value);
+            const isSelected = thisArticle?.tag?.includes(tagItem.value) ?? false;
             tagFormArray.at(index).setValue(isSelected);
         });
         

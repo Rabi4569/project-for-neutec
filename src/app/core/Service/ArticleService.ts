@@ -1,5 +1,6 @@
 import { LocalStorageService } from "./LocalStorageService";
-import { Observable, of, delay } from 'rxjs';
+import { ApiService } from "./ApiService";
+import { Observable } from 'rxjs';
 
 interface ArticleItem{
     id:number,
@@ -18,29 +19,29 @@ interface ResponseListData {
     data:{
         list:ArticleItem[],
         tag:TagItem[]
+        total:number
     }
 }
 
 export class ArticleService {
 
-    getAllArticles(): Observable<ResponseListData> {
-        return of({
-            status:200,
-            data:{
-                list:LocalStorageService.getItem('ArticleData').reverse() || [],
-                tag:this.getArticleTag()
-            }
-        }).pipe(
-            delay(500) 
-        );
-    }
 
-    getArticleById(id: number): ArticleItem | undefined {
+    getAllArticles(query:{page:number}): Observable<ResponseListData> {
 
-        const articles: ArticleItem[] = LocalStorageService.getItem('ArticleData') || [];
+        const allData = LocalStorageService.getItem('ArticleData') || []
+        const reversedData = [...allData].reverse()
         
-        return articles.find(item => item.id === id);
+        const pageSize = 20
+        const startIndex = query.page * pageSize
+        const endIndex = startIndex + pageSize
+        
+        const paginatedData = reversedData.slice(startIndex, endIndex)
 
+        return ApiService.useApi({
+            list: paginatedData,
+            tag: this.getArticleTag(),
+            total: allData.length
+        }) 
     }
 
     saveArticle (data:ArticleItem){
@@ -77,10 +78,23 @@ export class ArticleService {
 
         LocalStorageService.setItem('ArticleData', ArticleData)
 
-        return {
-            status:200,
+        return ApiService.useApi({
             message:"success"
-        }
+        })
+
+    }
+
+    deleteArticle(id:number[]){
+
+        const articles: ArticleItem[] = LocalStorageService.getItem('ArticleData') || [];
+        
+        const saveArticles = articles.filter(item => !id.includes(item.id) )
+
+        LocalStorageService.setItem('ArticleData', saveArticles);
+
+        return ApiService.useApi({
+            message:"success"
+        })
 
     }
 

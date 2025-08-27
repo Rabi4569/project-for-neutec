@@ -17,16 +17,14 @@
                     <mat-checkbox 
                         (change)="$event ? toggleAllRows() : null"
                         [checked]="isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()"
-                        [aria-label]="checkboxLabel()">
+                        [indeterminate]="hasSelectValue() && !isAllSelected()">
                     </mat-checkbox>
                 </th>
                 <td mat-cell *matCellDef="let row">
                     <mat-checkbox 
                         (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)">
+                        (change)="$event ? toggleRow(row) : null"
+                        [checked]="isRowSelected(row)">
                     </mat-checkbox>
                 </td>
             </ng-container>

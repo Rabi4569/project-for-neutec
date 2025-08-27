@@ -1,8 +1,7 @@
-import { Component, input, output, TemplateRef, computed, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, input, output, TemplateRef, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { SelectionModel } from '@angular/cdk/collections';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -19,17 +18,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     styleUrls: ['./dataTable.component.scss']
 })
 
-export class DataTableComponent implements OnInit{
+export class DataTableComponent {
 
     data    = input<any[]>([]);
     columns = input<string[]>([]);
     columnTemplates = input<Record<string, TemplateRef<any>>>();
+    selectionKey = input<string>('id')
 
     showSelection = input<boolean>(false)
-    selection     = new SelectionModel<any>(true, []);
+    selection     = input<number[]>([]);
     loading       = input<boolean>(false);
 
-    selectionChange = output<any[]>();
+    selectionChange = output<number[]>();
 
     actionTemplate  = input<TemplateRef<any>>();
 
@@ -47,31 +47,44 @@ export class DataTableComponent implements OnInit{
         return disCol;
     });
 
-    // 全選相關方法
-    isAllSelected() {
-        const numSelected = this.selection.selected.length;
+    isAllSelected = computed(() => {
+        const numSelected = this.selection().length;
         const numRows = this.data().length;
         return numSelected === numRows;
-    }
+    }) 
+
+    hasSelectValue = computed(() => {
+        return  this.selection().length > 0;
+    })
 
     toggleAllRows() {
         if (this.isAllSelected()) {
-            this.selection.clear();
+            this.selectionChange.emit([]);
         } else {
-            this.selection.select(...this.data());
+            const keyName = this.selectionKey();
+            const selectionItems = this.data().map(item => item[keyName]);
+            this.selectionChange.emit(selectionItems);
         }
     }
 
-    checkboxLabel(row?: any): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'cancel all selected' : 'select all'}`;
+    toggleRow(row: any) {
+        const keyName = this.selectionKey();
+        const selectionValue = row[keyName];
+        const currentSelection = [...this.selection()];
+        const index = currentSelection.indexOf(selectionValue);
+        
+        if (index > -1) {
+            currentSelection.splice(index, 1);
+        } else {
+            currentSelection.push(selectionValue);
         }
-        return `${this.selection.isSelected(row) ? 'cancel selected' : 'select'} row ${row.id}`;
+        
+        this.selectionChange.emit(currentSelection);
     }
 
-    ngOnInit() {  
-        this.selection.changed.subscribe(() => {
-            this.selectionChange.emit(this.selection.selected);
-        });
+    isRowSelected(row: any): boolean {
+        const keyName = this.selectionKey();
+        return this.selection().includes(row[keyName]);
     }
+
 }

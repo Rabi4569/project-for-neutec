@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, ViewChild } from '@angular/core';
+import { Component, signal, OnInit, ViewChild, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultLayoutComponent } from '../shared/layout/default/default.component';
 import { DataTableComponent } from '../shared/component/DataTable/dataTable.component';
@@ -11,6 +11,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ArticleEditorComponent } from './editor/editor.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Article {
     id:number,
@@ -55,38 +56,50 @@ export class ArticleComponent implements OnInit{
     tagData   = signal<any[]>([])
     editForm  = signal<boolean>(false);
 
-    selectedArticle: Article | null = null;
-    deleteButton = signal<boolean>(false)
+    selectedArticle = signal<Article | null>(null);
+    selectedIds = signal<number[]>([]);
+    deleteButton = computed(() => this.selectedIds().length > 0);
 
-    constructor( private articleService:ArticleService ){}
+    currentPage = signal<number>(0);
+    totalItems = signal<number>(0);
 
-    openEditor (id:number = 0) {
+    constructor( 
+        private articleService: ArticleService,
+        private route: ActivatedRoute,
+        private router: Router
+    ){}
 
-       this.editForm.set(true)
-      
+    openEditor () {
+        this.selectedArticle.set(null);
+        this.editForm.set(true)
     }
 
     edit(row: any) {
-        console.log('編輯:', row);
-        this.selectedArticle = row;  // 設置要編輯的文章
+        this.selectedArticle.set(row); 
         this.editForm.set(true)      
     }
 
-    delete(row: any) {
-        console.log('刪除:', row);
+    deleteSelected() {
+        this.articleService.deleteArticle(this.selectedIds())
     }
 
     getArticleList () {
 
         this.loading.set(true);
 
-        this.articleService.getAllArticles().subscribe({
+        // 準備分頁參數
+        const params = {
+            page: this.currentPage(),
+        };
+
+        this.articleService.getAllArticles(params).subscribe({
             next: (res) => {
                 if(res.status === 200){
 
-                    this.tabler.selection.clear()
                     this.data.set(res.data.list);
                     this.tagData.set(res.data.tag);
+                    this.totalItems.set(res.data.total || 0);
+                    this.selectedIds.set([]);
                     
                 }
             },
@@ -99,12 +112,8 @@ export class ArticleComponent implements OnInit{
         });
     }
 
-    onSelectionChange(selectedItem:any){
-        if(selectedItem.length > 0){
-            this.deleteButton.set(true)
-        }else{
-            this.deleteButton.set(false)
-        }
+    onSelectionChange(selectedIds: number[]){
+        this.selectedIds.set(selectedIds);
     }
 
     getTagContent (tagData:number[]) {
@@ -116,23 +125,63 @@ export class ArticleComponent implements OnInit{
 
     onSave(updatedArticle: any) {
 
-        const response = this.articleService.saveArticle(updatedArticle);
+        this.articleService.saveArticle(updatedArticle)
+        .subscribe({
+            next:(response) => {
+                if(response.status === 200) {
+                    this.editForm.set(false);
+                    this.getArticleList();
+                }
 
-        if(response.status === 200) {
-            this.selectedArticle = null;  
-            this.editForm.set(false);
-            
-            this.getArticleList();
-        }
+            },
+            error: (error) => {
+                console.error('Save failed:', error);
+            }
+        });
         
     }
   
     onCancel() {
         this.editForm.set(false);
-        this.selectedArticle = null
+        this.selectedArticle.set(null);
+    }
+
+    onPageChange(event: any) {
+        this.currentPage.set(event.pageIndex);
+        console.log(event.pageIndex)
+        this.updateUrl();
+        this.getArticleList();
+    }
+
+    private updateUrl() {
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {
+                page: this.currentPage(),
+            },
+            queryParamsHandling: 'merge'
+        });
+    }
+
+    private initFromQuery() {
+        const page = this.route.snapshot.queryParams['page'];
+        
+        if (page) this.currentPage.set(+page);
     }
 
     ngOnInit() {  
+        this.initFromQuery();
         this.getArticleList();
+        
+        // 監聽 query 參數變化
+        this.route.queryParams.subscribe(params => {
+            const page = params['page'];
+            
+            if (page && +page !== this.currentPage()) {
+                this.currentPage.set(+page);
+                this.getArticleList();
+            }
+            
+        });
     }
 }
