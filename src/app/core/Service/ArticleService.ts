@@ -5,8 +5,9 @@ import { Observable } from 'rxjs';
 interface ArticleItem{
     id:number,
     caption:string,
-    date:string
-    tag:number[] 
+    date:string,
+    tag:number[],
+    published:boolean
 }
 
 interface TagItem{

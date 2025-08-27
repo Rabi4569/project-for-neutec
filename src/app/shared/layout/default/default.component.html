@@ -10,7 +10,7 @@
         <mat-drawer #drawer mode="over">
             <mat-list role="list" class="menu-list">
                 @for (menuItem of systemMenu; track menuItem.link) {
-                    <mat-list-item role="listitem" class="menu-list-item">
+                    <mat-list-item role="listitem" [routerLink]="menuItem.link" routerLinkActive="active" class="menu-list-item">
                         <div class="icon">
                             <mat-icon>{{ menuItem.icon }}</mat-icon>
                         </div>

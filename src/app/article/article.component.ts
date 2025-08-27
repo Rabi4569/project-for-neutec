@@ -21,7 +21,8 @@ interface Article {
     content:string,
     author:string,
     date:string,
-    tag:number[]
+    tag:number[],
+    published:boolean
 }
 
 @Component ({
@@ -170,6 +171,8 @@ export class ArticleComponent implements OnInit{
 
     searchKeyword (keyword:string) {
         this.keyword.set(keyword);
+        this.currentPage.set(0); 
+        this.updateUrl();
         this.getArticleList();
     }
   
@@ -198,7 +201,11 @@ export class ArticleComponent implements OnInit{
     private initFromQuery() {
         const page = this.route.snapshot.queryParams['page'];
         
-        if (page) this.currentPage.set(+page);
+        if (page) {
+            this.currentPage.set(+page);
+        } else {
+            this.currentPage.set(0); 
+        }
     }
 
     ngOnInit() {  
@@ -211,6 +218,9 @@ export class ArticleComponent implements OnInit{
             
             if (page && +page !== this.currentPage()) {
                 this.currentPage.set(+page);
+                this.getArticleList();
+            } else if (!page && this.currentPage() !== 0) {
+                this.currentPage.set(0);
                 this.getArticleList();
             }
             

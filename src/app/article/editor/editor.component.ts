@@ -9,6 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 interface Article {
     id:number,
@@ -16,7 +17,8 @@ interface Article {
     content:string,
     author:string,
     date:string,
-    tag:number[]
+    tag:number[],
+    published:boolean
 }
 
 @Component({
@@ -30,7 +32,8 @@ interface Article {
         MatCheckboxModule,
         MatInputModule,
         MatFormFieldModule,
-        MatButtonModule
+        MatButtonModule,
+        MatSlideToggleModule
     ],
     providers:[
         ArticleService,
@@ -64,6 +67,7 @@ export class ArticleEditorComponent {
             title: ['', Validators.required],
             content: ['', Validators.required],
             author: [''],
+            published:false,
             tag: this.formBuilder.array(
                 tagData.map(() => new FormControl(false))
             ),
@@ -100,9 +104,10 @@ export class ArticleEditorComponent {
         
         // set form
         this.articleForm.patchValue({
-            title: thisArticle?.title ?? '',
-            content: thisArticle?.content ?? '',
-            author: thisArticle?.author ?? '',
+            title: thisArticle?.title ?? 'New Article Title',
+            content: thisArticle?.content ?? 'New Article Content',
+            published: thisArticle?.published ?? false,
+            author: thisArticle?.author ?? 'none',
             date: thisArticle?.date ?? new Date().toISOString()
         });
 

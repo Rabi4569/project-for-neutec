@@ -46,7 +46,7 @@ export class LogginComponent {
         private alertService:AlertService,
     ) {
         this.loginForm = this.fb.group({
-            username: ['admin_user', [Validators.required, this.usernameValidator]],
+            username: ['admin@mail.com', [Validators.required, Validators.email]],
             password: ['admin_password', Validators.required]
         });
 
@@ -60,17 +60,6 @@ export class LogginComponent {
 
         })
     }
-
-    usernameValidator(control: any) {
-        const value = control.value;
-        if (!value) return null;
-    
-        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-          return { invalidUsername: true };
-        }
-        return null;
-      }
-    
 
     async login(): Promise<void> {
         if (!this.loginForm.valid) {

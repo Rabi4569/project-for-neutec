@@ -27,6 +27,12 @@
                 </div>
             }
             
+            <div class="publish-status">
+                <mat-slide-toggle formControlName="published">
+                  {{ articleForm.get('published')?.value ? 'published' : 'draft' }}
+                </mat-slide-toggle>
+              </div>
+            
             <mat-form-field appearance="outline" class="form-field content">
                 <mat-label>Content</mat-label>
                 <textarea matInput 

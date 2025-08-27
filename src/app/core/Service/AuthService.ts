@@ -7,7 +7,7 @@ export class AuthService {
 
         let status = 200;
 
-        if(username !== "admin_user") status = 401;
+        if(username !== "admin@mail.com") status = 401;
         if(password !== "admin_password") status = 401; 
 
         CookieService.setCookie('token', 'test-token', 7)

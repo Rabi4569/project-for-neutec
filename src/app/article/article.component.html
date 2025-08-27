@@ -23,15 +23,24 @@
                 [data]="data()" 
                 [actionTemplate]="actionTemplate" 
                 [showSelection]="true" 
-                [columns]="['id', 'title', 'tag', 'author', 'date']"
-                [columnTemplates]="{ tag: tagTemplate }"
+                [columns]="['title', 'tag', 'author', 'published', 'date']"
+                [columnTemplates]="{ tag: tagTemplate, published:publishedTepmlate }"
                 [selectionKey]="'id'"
                 [selection]="selectedIds()"
                 (selectionChange)="onSelectionChange($event)"
             />
             <ng-template #tagTemplate let-row let-value="value">
-                @for(tag of getTagContent(value); track tag){
-                    <mat-chip >{{tag}}</mat-chip>
+                <div class="tag-container">
+                    @for(tag of getTagContent(value); track tag){
+                        <mat-chip >{{tag}}</mat-chip>
+                    }
+                </div>
+            </ng-template>
+            <ng-template #publishedTepmlate let-row let-value="value">
+                @if(value){
+                    <mat-chip class="success">Published</mat-chip>
+                }@else{
+                    <mat-chip class="info">Draft</mat-chip>
                 }
             </ng-template>
             <ng-template #actionTemplate let-row>
