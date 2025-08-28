@@ -89,6 +89,7 @@ export class ArticleComponent implements OnInit{
     }
 
     deleteSelected() {
+        this.userStore.setGlobalLoading(true)
         if(window.confirm("Confirm Delete Selected?")){
             this.articleService.deleteArticle(this.selectedIds()).subscribe({
                 next: (res) => {
@@ -101,6 +102,8 @@ export class ArticleComponent implements OnInit{
                 },
                 complete:() => {
                     this.getArticleList();
+                    this.userStore.setGlobalLoading(false)
+
                 }
             })
         }

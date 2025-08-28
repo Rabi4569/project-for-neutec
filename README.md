@@ -41,6 +41,8 @@ npm run build
 ng build
 ```
 
+### 部署測試
+https://rabi4569.github.io/project-for-neutec
 
 ## 🔐 登入測試帳號
 
