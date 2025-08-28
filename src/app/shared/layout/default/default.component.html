@@ -4,7 +4,10 @@
           <mat-icon>menu</mat-icon>
         </button>
         <span>System Admin</span>
-        <span class="example-spacer"></span>
+        <span class="spacer"></span>
+        <button matIconButton class="drawer-butotn" (click)="logout()" aria-label="Example icon-button with menu icon">
+            <mat-icon>logout</mat-icon>
+        </button>
     </mat-toolbar>
     <mat-drawer-container class="main-container">
         <mat-drawer #drawer mode="over">

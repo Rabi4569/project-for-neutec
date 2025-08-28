@@ -1,5 +1,5 @@
 import { CookieService } from "./CookieService"
-import {of, delay } from 'rxjs';
+import { ApiService } from "./ApiService";
 
 export class AuthService {
 
@@ -12,18 +12,15 @@ export class AuthService {
 
         CookieService.setCookie('token', 'test-token', 7)
 
-        return of({
-            status:status,
-            message:"success"
-        }).pipe(
-            delay(1500) 
-        );
+        return ApiService.useApi(null, "success")
 
     }
 
     static logout () {
 
        CookieService.deleteCookie('token')
+       
+       return ApiService.useApi(null, "success")
 
     }
 

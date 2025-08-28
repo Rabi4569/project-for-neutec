@@ -14,6 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../core/Service/AlertService';
 import { SearchComponent } from './search/search.component';
+import { useUserStore } from '../core/Store/UserStoreService';
 
 interface Article {
     id:number,
@@ -72,7 +73,8 @@ export class ArticleComponent implements OnInit{
         private articleService: ArticleService,
         private route: ActivatedRoute,
         private router: Router,
-        private alertService: AlertService
+        private alertService: AlertService,
+        public userStore:useUserStore
     ){}
 
     openEditor () {
@@ -218,5 +220,6 @@ export class ArticleComponent implements OnInit{
             this.getArticleList();
 
         });
+        
     }
 }

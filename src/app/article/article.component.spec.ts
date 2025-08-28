@@ -3,6 +3,7 @@ import { ArticleComponent } from './article.component';
 import { ArticleService } from '../core/Service/ArticleService';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../core/Service/AlertService';
+import { useUserStore } from '../core/Store/UserStoreService';
 import { of, throwError } from 'rxjs';
 import { signal } from '@angular/core';
 import { provideZonelessChangeDetection } from '@angular/core';
@@ -14,11 +15,13 @@ describe('ArticleComponent', () => {
   let mockArticleService: jasmine.SpyObj<ArticleService>;
   let mockRouter: jasmine.SpyObj<Router>;
   let mockActivatedRoute: any;
+  let mockUserStore: jasmine.SpyObj<useUserStore>;
 
   beforeEach(async () => {
     // Mock services
     mockArticleService = jasmine.createSpyObj('ArticleService', ['getAllArticles', 'deleteArticle']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+    mockUserStore = jasmine.createSpyObj('useUserStore', ['setGlobalLoading']);
     mockActivatedRoute = {
       queryParams: of({ page: '1' }),
       snapshot: { queryParams: { page: '1' } }
@@ -31,7 +34,8 @@ describe('ArticleComponent', () => {
         { provide: ArticleService, useValue: mockArticleService },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: AlertService, useValue: jasmine.createSpyObj('AlertService', ['showSuccess']) }
+        { provide: AlertService, useValue: jasmine.createSpyObj('AlertService', ['showSuccess']) },
+        { provide: useUserStore, useValue: mockUserStore }
       ]
     }).compileComponents();
 
