@@ -198,6 +198,12 @@ export class ArticleComponent implements OnInit{
         });
     }
 
+    setGlobalLoading(status: boolean) {
+       
+        this.userStore.setGlobalLoading(true);
+        return ''; 
+    }
+
 
     ngOnInit() {  
           

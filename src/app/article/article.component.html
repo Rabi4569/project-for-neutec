@@ -66,6 +66,7 @@
     </div>
 
     @defer (when editForm()) {
+        {{ setGlobalLoading(false) }}
         <app-article-editor
             [article]="selectedArticle()"
             [open]="editForm()"
@@ -73,5 +74,7 @@
             (save)="onSave($event)"
             (cancel)="onCancel()"
         />
-    }
+    }@loading {
+        {{ setGlobalLoading(true) }}
+    } 
 </app-default-layout>
