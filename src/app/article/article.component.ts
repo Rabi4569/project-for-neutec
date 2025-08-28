@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, ViewChild, computed } from '@angular/core';
+import { Component, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultLayoutComponent } from '../shared/layout/default/default.component';
 import { DataTableComponent } from '../shared/component/DataTable/dataTable.component';
@@ -53,8 +53,6 @@ interface Article {
 
 export class ArticleComponent implements OnInit{
 
-    @ViewChild(DataTableComponent) tabler!: DataTableComponent;
-
     data      = signal<any[]>([]);
     loading   = signal(true);
     savingLoading = signal<boolean>(false)
@@ -68,7 +66,7 @@ export class ArticleComponent implements OnInit{
     deleteButton = computed(() => this.selectedIds().length > 0);
 
     currentPage = signal<number>(0);
-    totalItems = signal<number>(0);
+    totalItems  = signal<number>(0);
 
     constructor( 
         private articleService: ArticleService,
@@ -80,11 +78,14 @@ export class ArticleComponent implements OnInit{
     openEditor () {
         this.selectedArticle.set(null);
         this.editForm.set(true)
+
+        // this.router.navigate(['/article/edit/new']);
     }
 
     edit(row: any) {
         this.selectedArticle.set(row); 
-        this.editForm.set(true)      
+        this.editForm.set(true)  
+        // this.router.navigate(['/article/edit', row.id]);    
     }
 
     deleteSelected() {
@@ -109,7 +110,6 @@ export class ArticleComponent implements OnInit{
 
         this.loading.set(true);
 
-        // 準備分頁參數
         const params = {
             page: this.currentPage(),
         };
@@ -183,7 +183,7 @@ export class ArticleComponent implements OnInit{
 
     onPageChange(event: any) {
         this.currentPage.set(event.pageIndex);
-        console.log(event.pageIndex)
+        // console.log(event.pageIndex)
         this.updateUrl();
         this.getArticleList();
     }
@@ -198,32 +198,25 @@ export class ArticleComponent implements OnInit{
         });
     }
 
-    private initFromQuery() {
-        const page = this.route.snapshot.queryParams['page'];
-        
-        if (page) {
-            this.currentPage.set(+page);
-        } else {
-            this.currentPage.set(0); 
-        }
-    }
 
     ngOnInit() {  
-        this.initFromQuery();
-        this.getArticleList();
-        
-        // 監聽 query 參數變化
+          
         this.route.queryParams.subscribe(params => {
+
             const page = params['page'];
             
             if (page && +page !== this.currentPage()) {
+                
                 this.currentPage.set(+page);
-                this.getArticleList();
+
             } else if (!page && this.currentPage() !== 0) {
+
                 this.currentPage.set(0);
-                this.getArticleList();
+
             }
             
+            this.getArticleList();
+
         });
     }
 }

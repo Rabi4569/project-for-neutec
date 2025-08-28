@@ -13,7 +13,17 @@ export const routes: Routes = [
     },
     {
         path: 'article',
-        loadComponent: () => import('./article/article.component').then(m => m.ArticleComponent),
+        children:[
+            {
+                path: '',
+                loadComponent: () => import('./article/article.component').then(m => m.ArticleComponent)
+            },
+            {
+                path: 'edit',
+                loadChildren: () => import('./article/editor/edit.routes').then(m => m.editRoutes)
+            }
+        ],
+        // loadComponent: () => import('./article/article.component').then(m => m.ArticleComponent),
         canActivate: [AuthGuard]
     },
     {

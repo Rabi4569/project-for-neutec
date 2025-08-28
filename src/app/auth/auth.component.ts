@@ -72,6 +72,7 @@ export class LogginComponent {
         try {
             const success = await this.verifyUser();
             if (success) {
+                this.alertService.showSuccess("Login Success.")
                 this.router.navigate(['/article']);
             } else {
                 this.alertService.showError('User not found or password Incorrect.');
