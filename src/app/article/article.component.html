@@ -66,7 +66,6 @@
     </div>
 
     @defer (when editForm()) {
-        {{ setGlobalLoading(false) }}
         <app-article-editor
             [article]="selectedArticle()"
             [open]="editForm()"
@@ -74,7 +73,7 @@
             (save)="onSave($event)"
             (cancel)="onCancel()"
         />
-    }@loading(minimum 2s) {
-        {{ setGlobalLoading(true) }}
+    } @loading (minimum 1s) {
+        <div class="loading loading-enter">Component Loading...</div>
     } 
 </app-default-layout>

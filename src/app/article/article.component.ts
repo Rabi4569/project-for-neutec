@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, computed } from '@angular/core';
+import { Component, signal, OnInit, computed, afterNextRender } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DefaultLayoutComponent } from '../shared/layout/default/default.component';
 import { DataTableComponent } from '../shared/component/DataTable/dataTable.component';
@@ -199,8 +199,9 @@ export class ArticleComponent implements OnInit{
     }
 
     setGlobalLoading(status: boolean) {
-       
-        this.userStore.setGlobalLoading(true);
+        afterNextRender(() => {
+            this.userStore.setGlobalLoading(status);
+        });
         return ''; 
     }
 
