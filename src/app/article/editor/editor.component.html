@@ -11,10 +11,16 @@
                 <mat-label>title</mat-label>
                 <input matInput placeholder="Enter title please" formControlName="title">
             </mat-form-field>
+            
             <mat-form-field appearance="outline" class="form-field author">
                 <mat-label>author</mat-label>
                 <input matInput placeholder="Enter title please" formControlName="author">
             </mat-form-field>
+            <div class="published">
+                <mat-slide-toggle formControlName="published">
+                    {{ articleForm.get('published')?.value ? 'published' : 'draft' }}
+                </mat-slide-toggle>
+            </div>
            
             @if(tagData().length > 0){
                 <div class="tag-selection" formArrayName="tag">
@@ -27,11 +33,7 @@
                 </div>
             }
             
-            <div class="publish-status">
-                <mat-slide-toggle formControlName="published">
-                  {{ articleForm.get('published')?.value ? 'published' : 'draft' }}
-                </mat-slide-toggle>
-              </div>
+            
             
             <mat-form-field appearance="outline" class="form-field content">
                 <mat-label>Content</mat-label>

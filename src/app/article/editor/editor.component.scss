@@ -12,8 +12,23 @@
         box-sizing: border-box;
     }
 
-    .form-field {
+    .row {
         width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+       
+    }
+
+    .form-field,
+    .tag-selection,
+    .published {
+        width: 100%;
+
+        &.author {
+            width: auto;
+        }
 
     }
 

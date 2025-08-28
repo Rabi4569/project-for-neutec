@@ -83,7 +83,7 @@ src/app/
 
 - 使用 Standalone Components 減少模組依賴
 - 使用 loadComponent 製作頁面懶載入 讓載入時間加速
-- 使用 元件內router 達成功能分離懶載入(規劃中，目前已有router切割，但對應元件後續會補上) 
+- 使用 defer 達到部分元件lazy loading
 - 運用 Signals 做組件各個別狀態管理
 - 運用 Injectable 做出類似pinia的全域狀態管理 控制全域UI組件
 - 運用 cookie 模擬http only cookie狀態 以達到模擬JWT登入狀態

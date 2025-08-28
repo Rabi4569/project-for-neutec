@@ -65,11 +65,13 @@
         </div>
     </div>
 
-    <app-article-editor
-        [article]="selectedArticle()"
-        [open]="editForm()"
-        [loading]="savingLoading()"
-        (save)="onSave($event)"
-        (cancel)="onCancel()"
-    />
+    @defer (when editForm()) {
+        <app-article-editor
+            [article]="selectedArticle()"
+            [open]="editForm()"
+            [loading]="savingLoading()"
+            (save)="onSave($event)"
+            (cancel)="onCancel()"
+        />
+    }
 </app-default-layout>

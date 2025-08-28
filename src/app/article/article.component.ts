@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ArticleService } from '../core/Service/ArticleService';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ArticleEditorComponent } from './editor/editor.component';
 import { MatChipsModule } from '@angular/material/chips';
@@ -45,8 +44,6 @@ interface Article {
     ],
     providers: [
         ArticleService,
-        provideNativeDateAdapter(),
-        AlertService
     ],
     templateUrl: './article.component.html',
     styleUrls: ['./article.component.scss']
@@ -68,6 +65,7 @@ export class ArticleComponent implements OnInit{
 
     currentPage = signal<number>(0);
     totalItems  = signal<number>(0);
+    
 
     constructor( 
         private articleService: ArticleService,

@@ -27,7 +27,6 @@ import { AlertService } from '../core/Service/AlertService';
     ],
     providers:[
         AuthService,
-        AlertService
     ],
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss']

@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, For
 import { ArticleService } from '../../core/Service/ArticleService';
 import { DataDialogComponent } from "../../shared/component/DataDialog/dataDialog.component";
 import { MatDatepickerModule}  from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -37,7 +36,6 @@ interface Article {
     ],
     providers:[
         ArticleService,
-        provideNativeDateAdapter(),
     ],
     templateUrl:'./editor.component.html',
     styleUrls:['./editor.component.scss'],
