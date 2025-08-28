@@ -37,11 +37,9 @@
                 </div>
             </ng-template>
             <ng-template #publishedTepmlate let-row let-value="value">
-                @if(value){
-                    <mat-chip class="success">Published</mat-chip>
-                }@else{
-                    <mat-chip class="info">Draft</mat-chip>
-                }
+                <mat-chip [ngClass]="value ? 'success' : 'info'">
+                    {{ value | publishStatus }}
+                  </mat-chip>
             </ng-template>
             <ng-template #actionTemplate let-row>
                 <button 

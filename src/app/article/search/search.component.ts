@@ -31,7 +31,7 @@ export class SearchComponent {
     constructor() {
         
         this.searchSubject.pipe(
-            debounceTime(1500) 
+            debounceTime(500) 
         ).subscribe(searchTerm => {
             this.searching.emit(searchTerm);
         });

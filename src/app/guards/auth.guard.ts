@@ -13,6 +13,8 @@ export class AuthGuard implements CanActivate {
     canActivate():boolean{
 
         if(AuthService.checkLoggin()) return true;
+
+        alert('Login Error.')
         
         this.router.navigate(['/auth']);
 

@@ -1,5 +1,6 @@
 import { LocalStorageService } from "./LocalStorageService";
 import { ApiService } from "./ApiService";
+import { AuthService } from "./AuthService";
 import { Observable } from 'rxjs';
 
 interface ArticleItem{
@@ -52,6 +53,10 @@ export class ArticleService {
 
     saveArticle (data:ArticleItem){
 
+        if(AuthService.checkLoggin()){
+            
+        }
+
         const ArticleData = LocalStorageService.getItem('ArticleData');
 
         data.date = new Date().toISOString().split('T')[0];
@@ -80,7 +85,6 @@ export class ArticleService {
             ArticleData.push(data);
 
           }
-       
 
         LocalStorageService.setItem('ArticleData', ArticleData)
 

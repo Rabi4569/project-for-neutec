@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../core/Service/AlertService';
 import { SearchComponent } from './search/search.component';
 import { useUserStore } from '../core/Store/UserStoreService';
+import { PublishStatusPipe } from '../shared/pipe/publish-status.pipe';
 
 interface Article {
     id:number,
@@ -40,7 +41,8 @@ interface Article {
         MatCheckboxModule,
         ArticleEditorComponent,
         MatChipsModule,
-        SearchComponent
+        SearchComponent,
+        PublishStatusPipe
     ],
     providers: [
         ArticleService,

@@ -53,7 +53,8 @@ export class DefaultLayoutComponent{
         this.userStore.setGlobalLoading(true)
         AuthService.logout().subscribe({
             next:(res) => {
-                if(res.status === 200){
+                
+                if(res.message === 'success'){
                     this.router.navigate(['/auth']);
                 }
             },
