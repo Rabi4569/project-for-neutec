@@ -14,10 +14,10 @@
 | npm | 11.4.2 |
 | RxJS | ~7.8.0 |
 
-### 測試框架
+<!-- ### 測試框架
 - Jasmine | ~5.9.0
 - Karma | ~6.4.0
-- Angular Testing Utilities
+- Angular Testing Utilities -->
 
 ## 🚀 建置 / 執行指令
 

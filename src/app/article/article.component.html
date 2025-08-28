@@ -74,7 +74,7 @@
             (save)="onSave($event)"
             (cancel)="onCancel()"
         />
-    }@loading {
+    }@loading(minimum 2s) {
         {{ setGlobalLoading(true) }}
     } 
 </app-default-layout>
