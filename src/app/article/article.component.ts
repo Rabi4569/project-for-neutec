@@ -91,24 +91,23 @@ export class ArticleComponent implements OnInit{
     }
 
     deleteSelected() {
-        this.userStore.setGlobalLoading(true)
-        if(window.confirm("Confirm Delete Selected?")){
-            this.articleService.deleteArticle(this.selectedIds()).subscribe({
-                next: (res) => {
-                    if(res.status === 200){
-                        this.alertService.showSuccess(res.message)                        
-                    }
-                },
-                error: (error) => {
-                    console.error('Loading failed:', error);
-                },
-                complete:() => {
-                    this.getArticleList();
-                    this.userStore.setGlobalLoading(false)
+        if(!window.confirm("Confirm Delete Selected?")) return;
 
+        this.userStore.setGlobalLoading(true)
+        this.articleService.deleteArticle(this.selectedIds()).subscribe({
+            next: (res) => {
+                if(res.status === 200){
+                    this.alertService.showSuccess(res.message)                        
                 }
-            })
-        }
+            },
+            error: (error) => {
+                console.error('Loading failed:', error);
+            },
+            complete:() => {
+                this.getArticleList();
+                this.userStore.setGlobalLoading(false)
+            }
+        })
     }
 
     getArticleList () {
