@@ -1,3 +1,5 @@
+@use '../../../../device.scss' as device;
+
 .dialog-container {
     position: fixed;
     width: 100%;
@@ -9,7 +11,7 @@
     left: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     transition: all 0.2s ease-in;
     opacity: 0;
     pointer-events: none;
@@ -34,5 +36,11 @@
             align-items: center;
             gap: 8px;
         }
+    }
+}
+
+@include device.device-m{
+    .dialog-container {
+        align-items: center;
     }
 }

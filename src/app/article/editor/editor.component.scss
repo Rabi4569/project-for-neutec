@@ -1,10 +1,12 @@
+@use '../../../device.scss' as device;
+
 .form-content {
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     width: 100%;
-    max-width: 768px;
+    max-width: 1024px;
     justify-content: space-between;
     align-items: flex-start;
 
@@ -39,4 +41,10 @@
         align-items: center;
     }
 
+}
+
+@include device.device-s {
+    ::ng-deep .dialog-container {
+        align-items: flex-end;
+    }
 }

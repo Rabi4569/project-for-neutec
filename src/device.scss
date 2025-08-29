@@ -1,0 +1,38 @@
+
+$device-s:375px;
+$device-sm:768px;
+$device-m:1024px;
+$device-ml:1280px;
+$device-l:1440px;
+$device-xl:1920px;
+
+@mixin device-s {
+    @media (min-width:$device-s){
+        @content;
+    }
+}
+@mixin device-sm {
+    @media (min-width:$device-sm){
+        @content;
+    }
+}
+@mixin device-m {
+    @media (min-width:$device-m){
+        @content;
+    }
+}
+@mixin device-ml {
+    @media (min-width:$device-ml){
+        @content;
+    }
+}
+@mixin device-l {
+    @media (min-width:$device-l){
+        @content;
+    }
+}
+@mixin device-xl {
+    @media (min-width:$device-xl){
+        @content;
+    }
+}
