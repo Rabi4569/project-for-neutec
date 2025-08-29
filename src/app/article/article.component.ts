@@ -15,16 +15,8 @@ import { AlertService } from '../core/Service/AlertService';
 import { SearchComponent } from './search/search.component';
 import { useUserStore } from '../core/Store/UserStoreService';
 import { PublishStatusPipe } from '../shared/pipe/publish-status.pipe';
+import { Article } from '../shared/models/Article.model';
 
-interface Article {
-    id:number,
-    title:string,
-    content:string,
-    author:string,
-    date:string,
-    tag:number[],
-    published:boolean
-}
 
 @Component ({
     selector: 'app-article',

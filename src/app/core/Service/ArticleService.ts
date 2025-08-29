@@ -2,14 +2,8 @@ import { LocalStorageService } from "./LocalStorageService";
 import { ApiService } from "./ApiService";
 import { AuthService } from "./AuthService";
 import { Observable } from 'rxjs';
+import { Article } from "../../shared/models/Article.model";
 
-interface ArticleItem{
-    id:number,
-    caption:string,
-    date:string,
-    tag:number[],
-    published:boolean
-}
 
 interface TagItem{
     name:string,
@@ -19,7 +13,7 @@ interface TagItem{
 interface ResponseListData {
     status:number,
     data:{
-        list:ArticleItem[],
+        list:Article[],
         tag:TagItem[]
         total:number
     }
@@ -51,7 +45,7 @@ export class ArticleService {
         }) 
     }
 
-    saveArticle (data:ArticleItem){
+    saveArticle (data:Article){
 
         if(AuthService.checkLoggin()){
             
@@ -63,7 +57,7 @@ export class ArticleService {
 
         if (data.id) {
 
-            const index = ArticleData.findIndex((item:ArticleItem) => item.id === data.id);
+            const index = ArticleData.findIndex((item:Article) => item.id === data.id);
 
             if (index !== -1) {
 
@@ -78,7 +72,7 @@ export class ArticleService {
           } else {
 
             const maxId = ArticleData.length > 0
-              ? Math.max(...ArticleData.map((item:ArticleItem) => item.id))
+              ? Math.max(...ArticleData.map((item:Article) => item.id))
               : 0;
       
             data.id = maxId + 1;
@@ -94,7 +88,7 @@ export class ArticleService {
 
     deleteArticle(id:number[]){
 
-        const articles: ArticleItem[] = LocalStorageService.getItem('ArticleData') || [];
+        const articles: Article[] = LocalStorageService.getItem('ArticleData') || [];
         
         const saveArticles = articles.filter(item => !id.includes(item.id) )
 

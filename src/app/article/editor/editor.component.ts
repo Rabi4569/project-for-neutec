@@ -9,16 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-
-interface Article {
-    id:number,
-    title:string,
-    content:string,
-    author:string,
-    date:string,
-    tag:number[],
-    published:boolean
-}
+import { Article } from "../../shared/models/Article.model";
 
 @Component({
     selector: 'app-article-editor',
