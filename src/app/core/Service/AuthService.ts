@@ -12,7 +12,7 @@ export class AuthService {
 
         CookieService.setCookie('token', 'test-token', 7)
 
-        return ApiService.useApi(null, "success")
+        return ApiService.useApi(null, "success", status)
 
     }
 
